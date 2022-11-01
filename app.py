@@ -35,6 +35,7 @@ def login():
         # return ",".join(map(str, logInOps[0]))
         z = logInOps.pop(0)
         data[str(z[0])] = (z[1], z[2], 0, 0)
+        logInOps.append(z)
         return ",".join(map(str, z))
 
     else:
