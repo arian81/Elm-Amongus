@@ -1,12 +1,11 @@
-from re import L
 from flask import Flask, request
 from uuid import uuid4
 from flask_cors import CORS
 import logging
 import time
 
-log = logging.getLogger("werkzeug")
-log.setLevel(logging.ERROR)
+# log = logging.getLogger("werkzeug")
+# log.setLevel(logging.ERROR)
 
 app = Flask(__name__)
 CORS(app)
@@ -14,10 +13,32 @@ CORS(app)
 data = {}
 room = 1
 
+# LOGIN SCHEMA
+# id,posX,posY
+
+logInOps = [
+    (1, 1000, -758),
+    (2, 1154, -761),
+    (3, 1077, -822),
+    (4, 1070, -710),
+    (5, 1000, -758),
+    (6, 1000, -758),
+    (7, 1000, -758),
+    (8, 1000, -758),
+]
+
 
 @app.route("/login")
 def login():
-    return str(uuid4())
+    global logInOps
+    if logInOps:
+        # return ",".join(map(str, logInOps[0]))
+        z = logInOps.pop(0)
+        data[str(z[0])] = (z[1], z[2], 0, 0)
+        return ",".join(map(str, z))
+
+    else:
+        return ("", 403)
 
 
 @app.route("/moved")
@@ -26,6 +47,7 @@ def moved():
         round(float(request.args["x"])),
         round(float(request.args["y"])),
         int(request.args["a"]),
+        int(request.args["f"]),
     )
     # Printing the data to the terminal.
     # print(data)
@@ -34,12 +56,13 @@ def moved():
 
 @app.route("/getloc")
 def getloc():
-    d = (
-        data.get("blah", (0, 0, 0))
-        if request.args["id"] == "bruh"
-        else data.get("bruh", (0, 0, 0))
-    )
-    return f"{d[0]},{d[1]},{d[2]}"
+    s = ""
+    for k in data:
+        if k != request.args["id"]:
+            mate = data[k]
+            s += f"{k},{mate[0]},{mate[1]},{mate[2]},{mate[3]}\n"
+    return s
+    # return data.values().join
 
 
 # @app.route("")
