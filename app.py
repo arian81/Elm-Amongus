@@ -63,6 +63,7 @@ def getloc():
             s += f"{k},{mate[0]},{mate[1]},{mate[2]},{mate[3]}\n"
     return s
     # return data.values().join
+    print('test')
 
 
 # @app.route("")
